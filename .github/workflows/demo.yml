@@ -30,7 +30,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: DockerFileFolder/
+          context: react-docker/
           push: true
           tags: niyazhasan/react-demo:latest
 
