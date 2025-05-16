@@ -40,7 +40,7 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=my-react-app
-            -Dsonar.sources=src
+            -Dsonar.sources=./react-docker/src
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
