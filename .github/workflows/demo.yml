@@ -30,6 +30,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd react-docker
           npm ci 
           npm run build 
 
