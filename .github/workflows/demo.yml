@@ -14,26 +14,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  push_to_registry:
-    name: Push Docker image to Docker Hub
+  code-quality-check:
+    name: Code analysis
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-         node-version: '18'
-
-
-
-      - name: Install dependencies
-        run: |
-          cd react-docker
-          npm install
-          npm ci 
-          npm run build 
 
       - name: Run SonarQube scan
         uses: sonarsource/sonarqube-scan-action@v2
@@ -41,7 +27,24 @@ jobs:
           args: >
             -Dsonar.projectKey=my-react-app
             -Dsonar.sources=./react-docker/src
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    needs: code-quality-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Run SonarQube scan
+        uses: sonarsource/sonarqube-scan-action@v2
+        with:
+          args: >
+            -Dsonar.projectKey=my-react-app
+            -Dsonar.sources=./react-docker/src
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
